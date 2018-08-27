@@ -8,7 +8,9 @@ module ActiveRecord
 
       def initialize(name, options = {})
         @options = options
-        @parts = [format('CREATE SEQUENCE %s', name)]
+
+        command_str = "CREATE SEQUENCE #{options[:if_not_exist] ? 'IF NOT EXISTS' : ''} %s"
+        @parts = [format(command_str, name)]
       end
 
       def to_sql
@@ -41,6 +43,7 @@ module ActiveRecord
       def configure_cycle
         parts << (options.fetch(:cycle, false) ? 'CYCLE' : 'NO CYCLE')
       end
+      
     end
 
     private_constant(:SequenceSQLBuilder)
