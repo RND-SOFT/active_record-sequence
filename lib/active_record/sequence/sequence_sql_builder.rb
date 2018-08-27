@@ -12,6 +12,7 @@ module ActiveRecord
       end
 
       def to_sql
+        error_if_not_exist
         configure_increment
         configure_min_value
         configure_max_value
@@ -40,6 +41,10 @@ module ActiveRecord
 
       def configure_cycle
         parts << (options.fetch(:cycle, false) ? 'CYCLE' : 'NO CYCLE')
+      end
+      
+      def error_if_not_exist
+        parts << (options.fetch(:error_if_not_exist) ? 'IF NOT EXISTS' : '') if options[:error_if_not_exist]
       end
     end
 
